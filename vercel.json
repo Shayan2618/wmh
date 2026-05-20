@@ -5,17 +5,12 @@
       "src": "server.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": [
-          "public/**",
-          "node_modules/sql.js/dist/sql-asm.js"
-        ]
+        "includeFiles": ["public/**", "node_modules/sql.js/dist/**"]
       }
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/server.js"
-    }
+    { "src": "/public/(.*)", "dest": "/server.js" },
+    { "src": "/(.*)",        "dest": "/server.js" }
   ]
 }
