@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WMH Barber — Premium Barbershop & Grooming</title>
+<meta name="description" content="WMH Barber — Premium men's grooming. Haircut, beard, hot-towel shave, hammam & traditional care. Book your appointment." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cinzel:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Page intro curtain -->
+<div class="curtain" id="curtain">
+  <div class="curtain__panel"></div>
+  <div class="curtain__mark">WMH</div>
+  <div class="curtain__bar"></div>
+</div>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+  <div class="nav__links">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#barbers">Barbers</a>
+    <a href="#gallery">Gallery</a>
+  </div>
+  <a href="#top" class="nav__brand">
+    <span class="nav__brand-mark">WMH <em>Barber</em></span>
+    <span class="nav__brand-sub">Premium · Est. 2019</span>
+  </a>
+  <div class="nav__links right">
+    <a href="#location">Location</a>
+    <a href="#contact">Contact</a>
+    <a href="#book" class="btn btn--solid">Book Now <span class="arrow">→</span></a>
+  </div>
+</nav>
+
+<!-- App root -->
+<div id="app"></div>
+
+<!-- React -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+// ===================== ASSETS =====================
+const U = (id, w = 1400) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+const IMG = {
+  hero: U("photo-1503951914875-452162b0f3f1", 1800),
+  founder: U("photo-1599351431202-1e0f0137899a", 1000),
+  hammam: U("photo-1540555700478-4be289fbecef", 1400),
+  loc: U("photo-1521590832167-7bcbfaa6381f", 1400),
+  barbers: [
+    U("photo-1517832606299-7ae9b720a186", 800),
+    U("photo-1605497788044-5a32c7078486", 800),
+    U("photo-1559599101-f09722fb4948", 800),
+    U("photo-1493256338651-d82f7acb2b38", 800),
+  ],
+  gallery: [
+    U("photo-1622286342621-4bd786c2447c", 1200),
+    U("photo-1585747860715-2ba37e788b70", 1000),
+    U("photo-1521590832167-7bcbfaa6381f", 900),
+    U("photo-1599351431202-1e0f0137899a", 900),
+    U("photo-1583195764036-6dc248ac07d9", 1400),
+    U("photo-1540555700478-4be289fbecef", 1200),
+  ],
+};
+
+// ===================== DATA =====================
+const services = [
+  { num: "01", name: "Signature Cut", sub: "Coupe Signature", desc: "Consultation, precision scissor cut, shampoo, scalp massage and styling.", time: "45 min", price: 45 },
+  { num: "02", name: "Royal Shave", sub: "Rasage Royal", desc: "Hot towel, pre-shave oil, straight-razor work with cooling balm.", time: "40 min", price: 35 },
+  { num: "03", name: "Beard Sculpt", sub: "Sculpting de Barbe", desc: "Line-up, scissor work, hot towel and beard oil.", time: "30 min", price: 28 },
+  { num: "04", name: "Hammam Ritual", sub: "Rituel Hammam", desc: "Black soap, kessa exfoliation, ghassoul clay and steam.", time: "60 min", price: 75 },
+  { num: "05", name: "Father & Son", sub: "Pere & Fils", desc: "Two cuts, side by side. We keep little hands busy and the conversation flowing.", time: "60 min", price: 65 },
+  { num: "06", name: "Full Experience", sub: "L'Experience Complete", desc: "Cut, shave, hammam, beard oil and a glass of mint tea.", time: "2 h 30", price: 149 },
+];
+
+const barbers = [
+  { name: "Hicham W.", role: "Master · Founder", years: "14 yrs" },
+  { name: "Yassine M.", role: "Senior Stylist", years: "9 yrs" },
+  { name: "Karim B.", role: "Beard Specialist", years: "7 yrs" },
+  { name: "Omar L.", role: "Hammam Therapist", years: "11 yrs" },
+];
+
+const gallery = [
+  { cls: "g-1", label: "Atelier - Casablanca" },
+  { cls: "g-2", label: "Tools of the Trade" },
+  { cls: "g-3", label: "Classic Chair" },
+  { cls: "g-4", label: "Skin Fade 06" },
+  { cls: "g-5", label: "Front of House" },
+  { cls: "g-6", label: "Hammam Suite" },
+];
+
+const reviews = [
+  { text: "The closest shave I've ever had, in the calmest room I've ever sat in. Tea, towels, and a barber who doesn't rush.", name: "Adam K.", role: "Regular 3 years" },
+  { text: "I came in for a wedding cut and left a member. Hicham reads hair like a tailor reads fabric every line considered.", name: "Mehdi R.", role: "Casablanca" },
+  { text: "Quiet, beautifully built, no rush. The kind of place you book on the way home from the airport.", name: "Julien P.", role: "Paris Casablanca" },
+  { text: "Took my father here for his 60th. He's been going to the same barber for 30 years and asked when we could come back.", name: "Sami D.", role: "Visiting Rabat" },
+];
+
+const hours = [
+  { day: "Monday", time: "Closed", closed: true },
+  { day: "Tuesday", time: "10:00 - 20:00" },
+  { day: "Wednesday", time: "10:00 - 20:00" },
+  { day: "Thursday", time: "10:00 - 21:00" },
+  { day: "Friday", time: "10:00 - 21:00" },
+  { day: "Saturday", time: "09:00 - 21:00" },
+  { day: "Sunday", time: "11:00 - 18:00" },
+];
+
+// ===================== HOOKS =====================
+
+// Scroll reveal — IntersectionObserver only, zero mouse tracking
+function useReveal() {
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -4% 0px" }
+    );
+    document.querySelectorAll(".reveal, .reveal-stagger, .reveal-left, .reveal-right, .reveal-scale")
+      .forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+}
+
+function useNavScroll() {
+  useEffect(() => {
+    const nav = document.getElementById("nav");
+    const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+}
+
+function useCurtain() {
+  useEffect(() => {
+    const c = document.getElementById("curtain");
+    const t = setTimeout(() => {
+      c.classList.add("done");
+      setTimeout(() => { c.style.display = "none"; }, 600);
+    }, 2900);
+    return () => clearTimeout(t);
+  }, []);
+}
+
+// ===================== HERO TOOLS =====================
+
+function ScissorsSVG3D() {
+  return (
+    <svg viewBox="0 0 100 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sc-bl" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#f5e8b0"/>
+          <stop offset="30%" stopColor="#d4a84b"/>
+          <stop offset="70%" stopColor="#8b6f3e"/>
+          <stop offset="100%" stopColor="#3a2510"/>
+        </linearGradient>
+        <linearGradient id="sc-br" x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0%" stopColor="#f5e8b0"/>
+          <stop offset="30%" stopColor="#d4a84b"/>
+          <stop offset="70%" stopColor="#8b6f3e"/>
+          <stop offset="100%" stopColor="#3a2510"/>
+        </linearGradient>
+        <linearGradient id="sc-rg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#f0d898"/>
+          <stop offset="45%" stopColor="#c8a464"/>
+          <stop offset="100%" stopColor="#6b4e28"/>
+        </linearGradient>
+        <linearGradient id="sc-pv" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#f5e8b0"/>
+          <stop offset="50%" stopColor="#c8a464"/>
+          <stop offset="100%" stopColor="#5a3e18"/>
+        </linearGradient>
+        <filter id="sc-sh" x="-20%" y="-10%" width="150%" height="130%">
+          <feDropShadow dx="3" dy="5" stdDeviation="4" floodColor="#000" floodOpacity="0.65"/>
+        </filter>
+        <filter id="sc-gl">
+          <feGaussianBlur stdDeviation="1.5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      {/* Left blade + shank + ring */}
+      <g className="sc-blade-l" filter="url(#sc-sh)">
+        <path d="M50 120 L8 12 Q7 5 15 4 L25 3 Q33 3 35 10 L50 120Z"
+          fill="url(#sc-bl)" stroke="#2a1808" strokeWidth="0.7"/>
+        <path d="M50 120 L11 7" stroke="rgba(255,245,195,0.85)" strokeWidth="1.3" strokeLinecap="round"/>
+        <path d="M46 117 L24 38" stroke="rgba(0,0,0,0.22)" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M50 120 L28 194" stroke="url(#sc-rg)" strokeWidth="10" strokeLinecap="round"/>
+        <path d="M50 120 L28 194" stroke="rgba(255,245,195,0.32)" strokeWidth="3" strokeLinecap="round"/>
+        <ellipse cx="20" cy="226" rx="21" ry="27" stroke="url(#sc-rg)" strokeWidth="10" fill="none" transform="rotate(-14 20 226)"/>
+        <ellipse cx="20" cy="226" rx="11" ry="17" stroke="rgba(0,0,0,0.3)" strokeWidth="1" fill="none" transform="rotate(-14 20 226)"/>
+        <path d="M20 199 A21 27 0 0 0 20 253" stroke="rgba(255,245,195,0.42)" strokeWidth="3.5" fill="none" transform="rotate(-14 20 226)"/>
+      </g>
+
+      {/* Right blade + shank + ring */}
+      <g className="sc-blade-r" filter="url(#sc-sh)">
+        <path d="M50 120 L92 12 Q93 5 85 4 L75 3 Q67 3 65 10 L50 120Z"
+          fill="url(#sc-br)" stroke="#2a1808" strokeWidth="0.7"/>
+        <path d="M50 120 L89 7" stroke="rgba(255,245,195,0.85)" strokeWidth="1.3" strokeLinecap="round"/>
+        <path d="M54 117 L76 38" stroke="rgba(0,0,0,0.22)" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M50 120 L72 194" stroke="url(#sc-rg)" strokeWidth="10" strokeLinecap="round"/>
+        <path d="M50 120 L72 194" stroke="rgba(255,245,195,0.32)" strokeWidth="3" strokeLinecap="round"/>
+        <ellipse cx="80" cy="226" rx="21" ry="27" stroke="url(#sc-rg)" strokeWidth="10" fill="none" transform="rotate(14 80 226)"/>
+        <ellipse cx="80" cy="226" rx="11" ry="17" stroke="rgba(0,0,0,0.3)" strokeWidth="1" fill="none" transform="rotate(14 80 226)"/>
+        <path d="M80 199 A21 27 0 0 1 80 253" stroke="rgba(255,245,195,0.42)" strokeWidth="3.5" fill="none" transform="rotate(14 80 226)"/>
+      </g>
+
+      {/* Pivot screw */}
+      <circle cx="50" cy="120" r="12" fill="url(#sc-pv)" stroke="#2a1808" strokeWidth="1.5" filter="url(#sc-gl)"/>
+      <circle cx="50" cy="120" r="7.5" fill="#2e1c0a"/>
+      <circle cx="50" cy="120" r="4.5" fill="url(#sc-pv)"/>
+      <circle cx="47.5" cy="117.5" r="1.8" fill="rgba(255,245,195,0.95)"/>
+    </svg>
+  );
+}
+
+function RazorSVG3D() {
+  return (
+    <svg viewBox="0 0 52 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rz-bd" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#f0f0e8"/>
+          <stop offset="25%" stopColor="#d0cdb8"/>
+          <stop offset="60%" stopColor="#a09878"/>
+          <stop offset="100%" stopColor="#504838"/>
+        </linearGradient>
+        <linearGradient id="rz-sp" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#e8d080"/>
+          <stop offset="50%" stopColor="#c8a464"/>
+          <stop offset="100%" stopColor="#4a3820"/>
+        </linearGradient>
+        <linearGradient id="rz-hd" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#7a5430"/>
+          <stop offset="35%" stopColor="#3d2910"/>
+          <stop offset="65%" stopColor="#5a3e20"/>
+          <stop offset="100%" stopColor="#281608"/>
+        </linearGradient>
+        <filter id="rz-sh" x="-25%" y="-10%" width="160%" height="130%">
+          <feDropShadow dx="3" dy="5" stdDeviation="3.5" floodColor="#000" floodOpacity="0.6"/>
+        </filter>
+      </defs>
+
+      {/* Handle (scales) */}
+      <g filter="url(#rz-sh)">
+        <rect x="10" y="145" width="32" height="70" rx="8"
+          fill="url(#rz-hd)" stroke="#180e04" strokeWidth="0.7"/>
+        <line x1="15" y1="155" x2="15" y2="208" stroke="rgba(0,0,0,0.2)" strokeWidth="1"/>
+        <line x1="22" y1="152" x2="22" y2="210" stroke="rgba(0,0,0,0.2)" strokeWidth="1"/>
+        <line x1="30" y1="152" x2="30" y2="210" stroke="rgba(0,0,0,0.2)" strokeWidth="1"/>
+        <line x1="37" y1="155" x2="37" y2="208" stroke="rgba(0,0,0,0.2)" strokeWidth="1"/>
+        <rect x="11" y="146" width="8" height="68" rx="4"
+          fill="rgba(255,200,100,0.1)"/>
+        <circle cx="26" cy="165" r="4.5" fill="url(#rz-sp)" stroke="#180e04" strokeWidth="0.6"/>
+        <circle cx="26" cy="165" r="2.2" fill="rgba(255,245,195,0.65)"/>
+        <circle cx="26" cy="198" r="4.5" fill="url(#rz-sp)" stroke="#180e04" strokeWidth="0.6"/>
+        <circle cx="26" cy="198" r="2.2" fill="rgba(255,245,195,0.65)"/>
+      </g>
+
+      {/* Blade spine */}
+      <g filter="url(#rz-sh)">
+        <rect x="9" y="14" width="10" height="132" rx="3"
+          fill="url(#rz-sp)" stroke="#180e04" strokeWidth="0.6"/>
+        <path d="M10 16 L11 142" stroke="rgba(255,245,195,0.55)" strokeWidth="2" strokeLinecap="round"/>
+      </g>
+
+      {/* Blade body */}
+      <g filter="url(#rz-sh)">
+        <path d="M19 14 L19 142 Q19 147 26 147 Q33 147 33 142 L44 22 Q42 8 32 7 Q20 9 19 14Z"
+          fill="url(#rz-bd)" stroke="#1e1608" strokeWidth="0.6"/>
+        <path d="M44 22 L33 142" stroke="rgba(255,255,230,0.95)" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M22 20 L28 138" stroke="rgba(255,255,255,0.14)" strokeWidth="5"/>
+        <path d="M30 8 Q42 10 44 22" stroke="rgba(255,255,230,0.75)" strokeWidth="1" fill="none"/>
+        {/* Gleam sweep */}
+        <path className="rz-gleam" d="M36 30 Q38 60 36 90" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+      </g>
+
+      {/* Hinge pin */}
+      <circle cx="26" cy="145" r="5.5" fill="url(#rz-sp)" stroke="#180e04" strokeWidth="0.8"/>
+      <circle cx="26" cy="145" r="2.5" fill="rgba(255,245,195,0.75)"/>
+    </svg>
+  );
+}
+
+function CombSVG() {
+  const fine = Array.from({ length: 16 }, (_, i) => i);
+  const coarse = Array.from({ length: 8 }, (_, i) => i);
+  return (
+    <svg viewBox="0 0 46 196" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cb-gd" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#f0d898"/>
+          <stop offset="50%" stopColor="#c8a464"/>
+          <stop offset="100%" stopColor="#7a5f2e"/>
+        </linearGradient>
+        <linearGradient id="cb-sp" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#e8c878"/>
+          <stop offset="45%" stopColor="#c8a464"/>
+          <stop offset="100%" stopColor="#5a4020"/>
+        </linearGradient>
+        <filter id="cb-sh" x="-20%" y="-5%" width="150%" height="115%">
+          <feDropShadow dx="2" dy="4" stdDeviation="2.5" floodColor="#000" floodOpacity="0.55"/>
+        </filter>
+      </defs>
+      <g filter="url(#cb-sh)">
+        {/* spine */}
+        <rect x="28" y="0" width="18" height="196" rx="4"
+          fill="url(#cb-sp)" stroke="#2a1808" strokeWidth="0.7"/>
+        <rect x="29" y="4" width="5" height="188" rx="2.5"
+          fill="rgba(255,245,195,0.28)"/>
+        <line x1="45" y1="4" x2="45" y2="192" stroke="rgba(0,0,0,0.28)" strokeWidth="1.5"/>
+
+        {/* fine teeth */}
+        {fine.map(i => {
+          const y = 5 + i * 5.6;
+          return (
+            <g key={"f" + i}>
+              <rect x="2" y={y} width="26" height="3.2" rx="1.6"
+                fill="url(#cb-gd)" stroke="#2a1808" strokeWidth="0.35"/>
+              <line x1="4" y1={y + 0.9} x2="26" y2={y + 0.9}
+                stroke="rgba(255,245,195,0.48)" strokeWidth="0.7"/>
+            </g>
+          );
+        })}
+
+        {/* divider band */}
+        <rect x="1" y="96" width="27" height="6" rx="1.5"
+          fill="rgba(200,164,100,0.45)" stroke="#2a1808" strokeWidth="0.4"/>
+
+        {/* coarse teeth */}
+        {coarse.map(i => {
+          const y = 108 + i * 11.2;
+          return (
+            <g key={"c" + i}>
+              <rect x="0" y={y} width="28" height="5.5" rx="2.75"
+                fill="url(#cb-gd)" stroke="#2a1808" strokeWidth="0.35"/>
+              <line x1="2" y1={y + 1.4} x2="26" y2={y + 1.4}
+                stroke="rgba(255,245,195,0.48)" strokeWidth="0.9"/>
+            </g>
+          );
+        })}
+      </g>
+    </svg>
+  );
+}
+
+function HeroTools() {
+  return (
+    <div className="hero-tools" aria-hidden="true">
+      <div className="hero-tool hero-tool--scissors">
+        <ScissorsSVG3D />
+      </div>
+      <div className="hero-tool hero-tool--razor">
+        <RazorSVG3D />
+      </div>
+      <div className="hero-tool hero-tool--comb">
+        <CombSVG />
+      </div>
+    </div>
+  );
+}
+
+function ToolsDeco() {
+  return (
+    <div className="tools-deco" aria-hidden="true">
+      <span className="tools-deco__bg">BARBER</span>
+      <div className="tools-deco__razor">
+        <RazorSVG3D />
+      </div>
+      <div className="tools-deco__comb">
+        <CombSVG />
+      </div>
+    </div>
+  );
+}
+
+function ScissorsDeco({ style }) {
+  return (
+    <div className="scissors-deco" style={style} aria-hidden="true">
+      <svg viewBox="0 0 200 200" fill="none">
+        <defs>
+          <linearGradient id="bs" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#e6c585" />
+            <stop offset="1" stopColor="#8b6f3e" />
+          </linearGradient>
+        </defs>
+        <circle cx="100" cy="100" r="8" fill="url(#bs)" stroke="#3a2a16" strokeWidth="1.5" />
+        <circle cx="100" cy="100" r="3" fill="#3a2a16" />
+        <path d="M100 100L30 30l8-8 70 70Z" fill="url(#bs)" stroke="#3a2a16" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M100 100L170 30l-8-8-78 70Z" fill="url(#bs)" stroke="#3a2a16" strokeWidth="1.5" strokeLinejoin="round" />
+        <ellipse cx="135" cy="155" rx="22" ry="32" stroke="url(#bs)" strokeWidth="6" fill="none" transform="rotate(28 135 155)" />
+        <path d="M100 100l18 30" stroke="url(#bs)" strokeWidth="5" strokeLinecap="round" />
+        <ellipse cx="65" cy="155" rx="22" ry="32" stroke="url(#bs)" strokeWidth="6" fill="none" transform="rotate(-28 65 155)" />
+        <path d="M100 100L82 130" stroke="url(#bs)" strokeWidth="5" strokeLinecap="round" />
+      </svg>
+    </div>
+  );
+}
+
+// ===================== HERO =====================
+function Hero() {
+  const heroRef = useRef(null);
+
+  // Scroll parallax only — no mousemove / mouse tracking
+  useEffect(() => {
+    const bg = heroRef.current?.querySelector(".hero__bg");
+    if (!bg) return;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight * 1.2) {
+        bg.style.transform = `translate3d(0,${y * 0.38}px,0)`;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const renderWords = (txt, delayBase = 0) =>
+    txt.split(" ").map((w, i) => (
+      <span className="word" key={i}>
+        <span style={{ animationDelay: `${delayBase + i * 0.1}s` }}>{w}</span>
+      </span>
+    ));
+
+  return (
+    <section className="hero" id="top" ref={heroRef}>
+      <div className="hero__bg">
+        <video className="hero__video" autoPlay muted loop playsInline poster={IMG.hero}>
+          <source src="https://videos.pexels.com/video-files/3212185/3212185-hd_1920_1080_30fps.mp4" type="video/mp4" />
+          <img src={IMG.hero} alt="WMH Barber interior" />
+        </video>
+      </div>
+      <span className="hero__watermark" aria-hidden="true">BARBER</span>
+      <div className="hero-scissors" aria-hidden="true">
+        <ScissorsDeco />
+      </div>
+      <div className="hero-razor" aria-hidden="true">
+        <RazorSVG3D />
+      </div>
+      <div className="hero-comb" aria-hidden="true">
+        <CombSVG />
+      </div>
+      <div className="hero__content">
+        <span className="hero__eyebrow">WMH Barber Casablanca Est. 2019</span>
+        <h1 className="hero__display">
+          {renderWords("Sharp", 0.2)}{" "}
+          {renderWords("Cuts.", 0.32)}
+          <br />
+          <span className="word"><span style={{ animationDelay: "0.55s" }}><em>Slow</em></span></span>{" "}
+          {renderWords("Rituals.", 0.7)}
+        </h1>
+        <div className="hero__meta">
+          <div className="hero__tag">
+            <span>Premium Barber and Hammam</span>
+            <b>3 Rue Bab Al Irfane</b>
+          </div>
+          <div className="hero__tag">
+            <span>Open Today</span>
+            <b>10:00 - 20:00</b>
+          </div>
+          <div className="hero__scroll">
+            <div className="line"></div>
+            <span>Scroll</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===================== MARQUEE =====================
+function Marquee() {
+  const items = ["Premium Cuts", "Hot Towel Shave", "Hammam Ritual", "Beard Sculpt", "Casablanca", "Est. 2019", "Walk-ins by Tea"];
+  const row = (
+    <span>
+      {items.map((t, i) => (
+        <React.Fragment key={i}>
+          {i % 3 === 0 ? <em>{t}</em> : t}
+          <span className="star">&#10022;</span>
+        </React.Fragment>
+      ))}
+    </span>
+  );
+  return (
+    <div className="marquee" aria-hidden="true">
+      <div className="marquee__track">{row}{row}{row}{row}</div>
+    </div>
+  );
+}
+
+// ===================== INTRO =====================
+function Intro() {
+  return (
+    <section className="intro" id="about">
+      <ScissorsDeco style={{ top: "8%", right: "4%", width: 140, height: 140, opacity: 0.18 }} />
+      <div className="container intro__grid">
+        <div className="intro__visual reveal reveal-left">
+          <div className="photo">
+            <img src={IMG.founder} alt="Master barber at work" />
+          </div>
+          <div className="intro__badge">
+            <span className="num">7</span>
+            <span className="lbl">Years of Craft</span>
+          </div>
+        </div>
+        <div className="intro__body reveal reveal-right">
+          <span className="eyebrow">A Word From the Chair</span>
+          <h2 className="section-title intro__title">
+            A barbershop, <em>slowed down</em> on purpose.
+          </h2>
+          <p className="lead">
+            WMH Barber was opened with one rule — never rush a man out of the chair. We took the rhythm of an old neighbourhood barber, the patience of a Moroccan hammam, and built a room for both.
+          </p>
+          <p>
+            Every cut starts with conversation and a glass of mint tea. Every shave is mapped before the razor is opened. Every visit ends quieter than it began.
+          </p>
+          <div className="intro__stats">
+            <div className="stat reveal reveal-scale">
+              <div className="stat__num">2.4k</div>
+              <div className="stat__lbl">Members</div>
+            </div>
+            <div className="stat reveal reveal-scale" style={{ transitionDelay: ".15s" }}>
+              <div className="stat__num">4.9</div>
+              <div className="stat__lbl">Google 412 reviews</div>
+            </div>
+            <div className="stat reveal reveal-scale" style={{ transitionDelay: ".3s" }}>
+              <div className="stat__num">04</div>
+              <div className="stat__lbl">Master Barbers</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===================== SERVICES =====================
+function Services() {
+  return (
+    <section className="services" id="services">
+      <div className="container">
+        <div className="services__head reveal">
+          <div>
+            <span className="eyebrow">Services and Tariffs</span>
+            <h2 className="section-title" style={{ marginTop: 22 }}>The <em>menu</em>.</h2>
+          </div>
+          <p className="lead">Six rituals, priced honestly. All include consultation, hot towel and a finish you can feel two weeks later.</p>
+        </div>
+        <div className="services__list reveal-stagger">
+          {services.map((s) => (
+            <div className="svc" key={s.num}>
+              <div className="svc__num">{s.num}</div>
+              <div className="svc__name">{s.name}<em>— {s.sub}</em></div>
+              <div className="svc__desc">{s.desc}</div>
+              <div className="svc__time">{s.time}</div>
+              <div className="svc__price">${s.price}<small>CAD</small></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===================== HAMMAM =====================
+function Hammam() {
+  return (
+    <section className="hammam">
+      <div className="container hammam__grid">
+        <div className="hammam__visual reveal reveal-left">
+          <img src={IMG.hammam} alt="Hammam ritual" />
+        </div>
+        <div className="hammam__body reveal reveal-right">
+          <span className="eyebrow">The Hammam Ritual</span>
+          <h2 className="section-title">Steam, soap, <em>silence</em>.</h2>
+          <p className="lead">Behind the shop, a private hammam suite built from tadelakt and warmed by the day. Sixty minutes of traditional care.</p>
+          <ul className="hammam__list">
+            <li>Black soap with eucalyptus, applied warm</li>
+            <li>Kessa exfoliation, by hand, head to chest</li>
+            <li>Ghassoul clay mask and rinse</li>
+            <li>Cold-press argan oil to close the ritual</li>
+          </ul>
+          <a href="#book" className="btn" style={{ alignSelf: "flex-start", marginTop: 18 }}>
+            Reserve the Suite <span className="arrow">-&gt;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===================== BARBERS =====================
+function Barbers() {
+  return (
+    <section className="barbers" id="barbers">
+      <div className="container">
+        <div className="barbers__head reveal">
+          <div>
+            <span className="eyebrow">Our Barbers</span>
+            <h2 className="section-title" style={{ marginTop: 22 }}>Hands that <em>remember</em> you.</h2>
+          </div>
+          <p className="lead">Four chairs, four masters. Each barber holds your card from your first visit.</p>
+        </div>
+        <div className="barbers__grid reveal-stagger">
+          {barbers.map((b, i) => (
+            <article className="barber" key={i}>
+              <div className="barber__photo">
+                <img src={IMG.barbers[i]} alt={b.name} />
+                <div className="barber__years">{b.years}</div>
+              </div>
+              <div className="barber__info">
+                <h3 className="barber__name">{b.name}</h3>
+                <div className="barber__role">{b.role}</div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===================== GALLERY =====================
+function Gallery() {
+  return (
+    <section className="gallery" id="gallery">
+      <ScissorsDeco style={{ bottom: "8%", left: "3%", width: 120, height: 120, opacity: 0.12 }} />
+      <div className="container">
+        <div className="gallery__head reveal">
+          <span className="eyebrow">The Atelier</span>
+          <h2 className="section-title" style={{ marginTop: 22 }}>A look <em>inside</em>.</h2>
+        </div>
+        <div className="gallery__grid reveal-stagger">
+          {gallery.map((g, i) => (
+            <div className={`g ${g.cls}`} key={i} data-label={g.label}>
+              <img src={IMG.gallery[i]} alt={g.label} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===================== TESTIMONIALS =====================
+function Testimonials() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((x) => (x + 1) % reviews.length), 6500);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <section className="testimonials">
+      <div className="container">
+        <div className="test__head reveal">
+          <span className="eyebrow">From the Chair</span>
+          <h2 className="section-title" style={{ marginTop: 22 }}>What our <em>regulars</em> say.</h2>
+        </div>
+        <div className="test__stage reveal">
+          {reviews.map((r, k) => (
+            <div key={k} className={`test__quote ${k === i ? "active" : ""}`}>
+              <div className="test__stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+              <p className="test__quote-text">{r.text}</p>
+              <div className="test__author">
+                <div className="test__author-name">{r.name}</div>
+                <div className="test__author-role">{r.role}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="test__nav">
+          {reviews.map((_, k) => (
+            <button key={k} className={`test__dot ${k === i ? "active" : ""}`} onClick={() => setI(k)} aria-label={`Testimonial ${k + 1}`} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===================== BOOKING =====================
+function Booking() {
+  const [svc, setSvc] = useState(services[0]);
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [barber, setBarber] = useState("Any available");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [bookedSlots, setBookedSlots] = useState([]);
+
+  const slots = ["10:00","11:00","12:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"];
+
+  useEffect(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    setDate(d.toISOString().slice(0, 10));
+  }, []);
+
+  useEffect(() => {
+    if (!date) return;
+    fetch(`/api/booked-slots?date=${date}`)
+      .then(r => r.json())
+      .then(d => setBookedSlots(d.bookedSlots || []))
+      .catch(() => setBookedSlots([]));
+  }, [date]);
+
+  const disabledSlots = useMemo(() => new Set(bookedSlots), [bookedSlots]);
+  const canSubmit = svc && date && time && name.trim() && phone.trim() && !loading;
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!canSubmit) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, service: svc.name, price: svc.price, duration: svc.time, date, time, barber }),
+      });
+      if (res.ok) setSubmitted(true);
+    } catch (err) {
+      console.error("Booking error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setSubmitted(false); setName(""); setPhone(""); setTime(""); setSvc(services[0]);
+  };
+
+  return (
+    <section className="booking" id="book">
+      <div className="container booking__grid">
+        <div className="booking__head reveal reveal-left">
+          <span className="eyebrow">Reservation</span>
+          <h2 className="section-title" style={{ marginTop: 22 }}>Book your <em>chair</em>.</h2>
+          <p>Choose your ritual, pick a time, leave a name. We confirm by SMS within the hour. Cancellations free up to 4 hours before.</p>
+          <div className="booking__chips">
+            <span className="booking__chip">SMS Confirmation</span>
+            <span className="booking__chip">No deposit</span>
+            <span className="booking__chip">Walk-ins welcome</span>
+          </div>
+        </div>
+
+        <form className="form reveal" onSubmit={onSubmit}>
+          {submitted ? (
+            <div className="form__success">
+              <div className="form__success-check">&#10003;</div>
+              <h3>Chair Reserved</h3>
+              <p>
+                Thank you, {name.split(" ")[0]}. We'll confirm at {phone}. See you{" "}
+                {new Date(date).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })} at {time}.
+              </p>
+              <button type="button" className="btn" onClick={resetForm} style={{ marginTop: 18 }}>
+                Book another <span className="arrow">-&gt;</span>
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="form__step-header">
+                <span className="form__step-label">Step 01 - Service</span>
+                <span className="form__step-num">{services.findIndex(s => s.num === svc.num) + 1} / {services.length}</span>
+              </div>
+              <div className="svc-pick">
+                {services.map((s) => (
+                  <button type="button" key={s.num} className={`svc-pick__btn ${svc.num === s.num ? "active" : ""}`} onClick={() => setSvc(s)}>
+                    <span className="svc-pick__name">{s.name}</span>
+                    <span className="svc-pick__meta">{s.time} — ${s.price} CAD</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="form__step-header">
+                <span className="form__step-label">Step 02 - Date and Time</span>
+                <span className="form__step-num">{time ? "selected" : "—"}</span>
+              </div>
+              <div className="form__row">
+                <div className="form__group">
+                  <label className="form__label">Date</label>
+                  <input type="date" className="form__input" value={date}
+                    onChange={(e) => { setDate(e.target.value); setTime(""); }}
+                    min={new Date().toISOString().slice(0, 10)} />
+                </div>
+                <div className="form__group">
+                  <label className="form__label">Barber</label>
+                  <select className="form__select" value={barber} onChange={(e) => setBarber(e.target.value)}>
+                    <option>Any available</option>
+                    {barbers.map((b) => <option key={b.name}>{b.name}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="form__group">
+                <label className="form__label">Available Slots</label>
+                <div className="time-grid">
+                  {slots.map((t) => (
+                    <button type="button" key={t} className={time === t ? "active" : ""}
+                      disabled={disabledSlots.has(t)} onClick={() => setTime(t)}>
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form__step-header">
+                <span className="form__step-label">Step 03 - Your Details</span>
+              </div>
+              <div className="form__row">
+                <div className="form__group">
+                  <label className="form__label">Full Name</label>
+                  <input type="text" className="form__input" placeholder="Adam Khalil" value={name} onChange={(e) => setName(e.target.value)} />
+                </div>
+                <div className="form__group">
+                  <label className="form__label">Phone</label>
+                  <input type="tel" className="form__input" placeholder="+212 6 12 34 56 78" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                </div>
+              </div>
+
+              <div className="form__summary">
+                <div className="form__summary-row">
+                  <span>{svc.name}</span><span>{svc.time}</span>
+                </div>
+                <div className="form__summary-row">
+                  <span>{date ? new Date(date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"}) : "—"} - {time || "—"}</span>
+                  <span>{barber}</span>
+                </div>
+                <div className="form__summary-row total">
+                  <span>Total</span><span>${svc.price} CAD</span>
+                </div>
+              </div>
+
+              <button type="submit" className="btn btn--solid" disabled={!canSubmit}
+                style={{ opacity: canSubmit ? 1 : 0.45, alignSelf: "flex-start" }}>
+                {loading ? "Confirming..." : "Confirm Reservation"} <span className="arrow">-&gt;</span>
+              </button>
+            </>
+          )}
+        </form>
+      </div>
+    </section>
+  );
+}
+
+// ===================== LOCATION =====================
+function Location() {
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+  return (
+    <section className="location" id="location">
+      <div className="container location__grid">
+        <div className="location__photo reveal reveal-left">
+          <img src={IMG.loc} alt="WMH Barber storefront" />
+          <div className="location__pin">
+            <div className="location__pin-dot"></div>
+            <div className="location__pin-label">WMH Bab Al Irfane</div>
+          </div>
+        </div>
+        <div className="location__info reveal reveal-right">
+          <span className="eyebrow">Find Us</span>
+          <h2 className="section-title">3 Rue Bab <em>Al Irfane</em>.</h2>
+          <p>Quartier Maarif, Casablanca. Five minutes from Twin Center, valet parking after 18:00.</p>
+          <div>
+            <span className="form__label" style={{ display:"block", marginBottom:6 }}>Hours of Operation</span>
+            <div className="hours">
+              {hours.map((h) => (
+                <div className={`hours__row ${h.day === today ? "today" : ""}`} key={h.day}>
+                  <span className="hours__day">
+                    {h.day}
+                    {h.day === today && <span className="hours__open">OPEN NOW</span>}
+                  </span>
+                  <span className={`hours__time ${h.closed ? "closed" : ""}`}>{h.time}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="location__contact" id="contact">
+            <div className="location__contact-row"><span className="lbl">Phone</span><span>+212 522 48 12 00</span></div>
+            <div className="location__contact-row"><span className="lbl">Email</span><span>chair@wmhbarber.ma</span></div>
+            <div className="location__contact-row"><span className="lbl">Whatsapp</span><span>+212 6 61 24 80 90</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ===================== CTA STRIP =====================
+function CtaStrip() {
+  return (
+    <section className="cta-strip">
+      <div className="cta-strip__bg">WMH BARBER WMH</div>
+      <h2 className="reveal">Ready for the <em>chair?</em></h2>
+      <div className="cta-strip__btn-wrap reveal">
+        <a href="#book" className="btn btn--solid" style={{ fontSize:16, padding:"22px 40px" }}>
+          Book Your Visit <span className="arrow">-&gt;</span>
+        </a>
+      </div>
+    </section>
+  );
+}
+
+// ===================== FOOTER =====================
+function Footer() {
+  return (
+    <footer className="footer">
+      {/* Clean map strip in footer */}
+      <div className="footer__map-wrap reveal">
+        <div className="footer__map-label">
+          <span className="eyebrow">Our Location</span>
+          <p>3 Rue Bab Al Irfane,<br />Quartier Maarif, Casablanca</p>
+          <a
+            href="https://www.openstreetmap.org/?mlat=33.5731&mlon=-7.6298#map=15/33.5731/-7.6298"
+            className="footer__map-open-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open in Maps -&gt;
+          </a>
+        </div>
+        <div className="footer__map-frame">
+          <iframe
+            title="WMH Barber Location"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-7.6600%2C33.5600%2C-7.6100%2C33.5900&layer=mapnik&marker=33.5731%2C-7.6298"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+
+      {/* Footer links */}
+      <div className="container">
+        <div className="footer__top reveal">
+          <div className="footer__brand">
+            <div className="nav__brand-mark">WMH <em>Barber</em></div>
+            <p>Premium mens grooming in Casablanca. Cut, shave, hammam and the kind of conversation that's getting harder to find.</p>
+            <div className="footer__social">
+              <a href="#" aria-label="Instagram">IG</a>
+              <a href="#" aria-label="TikTok">TK</a>
+              <a href="#" aria-label="Whatsapp">WA</a>
+              <a href="#" aria-label="Google">G</a>
+            </div>
+          </div>
+          <div className="footer__col">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="#about">Our Story</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#barbers">Barbers</a></li>
+              <li><a href="#gallery">Atelier</a></li>
+            </ul>
+          </div>
+          <div className="footer__col">
+            <h4>Visit</h4>
+            <ul>
+              <li><a href="#location">Location</a></li>
+              <li><a href="#location">Hours</a></li>
+              <li><a href="#book">Reservation</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div className="footer__col">
+            <h4>Contact</h4>
+            <ul>
+              <li><span>+212 522 48 12 00</span></li>
+              <li><span>chair@wmhbarber.ma</span></li>
+              <li><span>3 Rue Bab Al Irfane</span></li>
+              <li><span>Casablanca, Morocco</span></li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer__bottom">
+          <small>2026 WMH Barber Casablanca. All rights reserved.</small>
+          <small>Designed with patience.</small>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ===================== ROOT =====================
+function App() {
+  useCurtain();
+  useNavScroll();
+  useReveal();
+  return (
+    <>
+      <Hero />
+      <Marquee />
+      <Intro />
+      <Services />
+      <Hammam />
+      <Barbers />
+      <Gallery />
+      <Testimonials />
+      <Booking />
+      <Location />
+      <CtaStrip />
+      <Footer />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+</script>
+
+</body>
+</html>
