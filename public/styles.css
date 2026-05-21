@@ -1610,10 +1610,26 @@ section {
   }
   .hero__tag b { font-size: 14px; }
 
-  /* Tools hidden on mobile */
-  .hero-scissors,
-  .hero-razor,
-  .hero-comb { display: none !important; }
+  /* Tools — visible on mobile, right side, smaller */
+  .hero-scissors {
+    display: block;
+    right: 12px;
+    top: 22%;
+    width: 72px;
+    height: 72px;
+  }
+  .hero-razor {
+    display: block;
+    right: 80px;
+    top: 55%;
+    width: 22px;
+  }
+  .hero-comb {
+    display: block;
+    right: 20px;
+    top: 58%;
+    width: 18px;
+  }
 
   /* Watermark smaller */
   .hero__watermark { font-size: clamp(56px, 22vw, 120px); }
