@@ -514,14 +514,14 @@ section {
   line-height: 1;
 }
 
-/* ===== Hero Scissors (right) ===== */
+/* ===== Hero Scissors (right — top of tools cluster) ===== */
 .hero-scissors {
   position: absolute;
-  right: clamp(36px, 5vw, 88px);
-  top: 50%;
-  transform: translateY(-52%);
-  width: clamp(110px, 11vw, 165px);
-  height: clamp(110px, 11vw, 165px);
+  right: clamp(60px, 7vw, 130px);
+  top: 30%;
+  transform: translateY(-50%);
+  width: clamp(100px, 10vw, 155px);
+  height: clamp(100px, 10vw, 155px);
   z-index: 2;
   display: none;
   filter: drop-shadow(0 8px 32px rgba(200,164,100,0.25)) drop-shadow(0 2px 10px rgba(0,0,0,0.5));
@@ -534,13 +534,13 @@ section {
   50%       { transform: translateY(-58%) rotate(2deg); }
 }
 
-/* ===== Hero Razor (left) ===== */
+/* ===== Hero Razor (right — middle of tools cluster) ===== */
 .hero-razor {
   position: absolute;
-  left: clamp(36px, 5vw, 88px);
-  top: 50%;
+  right: clamp(180px, 18vw, 300px);
+  top: 55%;
   transform: translateY(-50%);
-  width: clamp(30px, 3.5vw, 56px);
+  width: clamp(32px, 3.5vw, 58px);
   z-index: 2;
   display: none;
   filter: drop-shadow(0 6px 28px rgba(200,164,100,0.3)) drop-shadow(0 2px 8px rgba(0,0,0,0.6));
@@ -553,13 +553,13 @@ section {
   50%       { transform: translateY(calc(-50% + 12px)) rotate(-1.2deg); }
 }
 
-/* ===== Hero Comb (left side, beside razor) ===== */
+/* ===== Hero Comb (right — beside razor) ===== */
 .hero-comb {
   position: absolute;
-  left: clamp(90px, 10vw, 170px);
-  top: 50%;
+  right: clamp(110px, 11vw, 190px);
+  top: 60%;
   transform: translateY(-50%);
-  width: clamp(24px, 2.8vw, 46px);
+  width: clamp(26px, 2.8vw, 48px);
   z-index: 2;
   display: none;
   filter: drop-shadow(0 6px 28px rgba(200,164,100,0.3)) drop-shadow(0 2px 8px rgba(0,0,0,0.6));
