@@ -600,7 +600,7 @@ section {
 .marquee__track {
   display: flex;
   white-space: nowrap;
-  animation: marquee 38s linear infinite;
+  animation: marquee 18s linear infinite;
   gap: 64px;
   font-family: var(--display);
   font-weight: 500;
